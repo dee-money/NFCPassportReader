@@ -11,7 +11,10 @@ import CryptoTokenKit
 
 #if !os(macOS)
 import CoreNFC
-import CryptoKit
+
+#if canImport(CryptoKit)
+    import CryptoKit
+#endif
 
 @available(iOS 13, *)
 private enum PACEHandlerError {
