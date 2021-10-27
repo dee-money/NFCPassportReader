@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
   spec.platform = :ios
   spec.ios.deployment_target = "10.0"
 
-  spec.source       = { :git => "https://github.com/blyscuit/NFCPassportReader.git", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/dee-money/NFCPassportReader.git", :tag => "#{spec.version}" }
 
   spec.source_files  = "Sources/**/*.{swift}"
 
