@@ -7,7 +7,10 @@
 
 import Foundation
 
-import CryptoKit
+
+#if canImport(CryptoKit)
+    import CryptoKit
+#endif
 
 @available(iOS 13, macOS 10.15, *)
 class SecureMessagingSessionKeyGenerator {
@@ -123,34 +126,38 @@ class SecureMessagingSessionKeyGenerator {
         var hash : [UInt8]
         
         let algo = algo.lowercased()
-        if algo == "sha1" {
-            var hasher = Insecure.SHA1()
-            for d in dataElements {
-                hasher.update( data:d )
+
+        #if canImport(CryptoKit)
+            if algo == "sha1" {
+                var hasher = Insecure.SHA1()
+                for d in dataElements {
+                    hasher.update( data:d )
+                }
+                hash = Array(hasher.finalize())
+            } else if algo == "sha256" {
+                var hasher = SHA256()
+                for d in dataElements {
+                    hasher.update( data:d )
+                }
+                hash = Array(hasher.finalize())
+            } else if algo == "sha384" {
+                var hasher = SHA384()
+                for d in dataElements {
+                    hasher.update( data:d )
+                }
+                hash = Array(hasher.finalize())
+            } else if algo == "sha512" {
+                var hasher = SHA512()
+                for d in dataElements {
+                    hasher.update( data:d )
+                }
+                hash = Array(hasher.finalize())
+            } else {
+                throw NFCPassportReaderError.InvalidHashAlgorithmSpecified
             }
-            hash = Array(hasher.finalize())
-        } else if algo == "sha256" {
-            var hasher = SHA256()
-            for d in dataElements {
-                hasher.update( data:d )
-            }
-            hash = Array(hasher.finalize())
-        } else if algo == "sha384" {
-            var hasher = SHA384()
-            for d in dataElements {
-                hasher.update( data:d )
-            }
-            hash = Array(hasher.finalize())
-        } else if algo == "sha512" {
-            var hasher = SHA512()
-            for d in dataElements {
-                hasher.update( data:d )
-            }
-            hash = Array(hasher.finalize())
-        } else {
-            throw NFCPassportReaderError.InvalidHashAlgorithmSpecified
-        }
-        
+        #else
+        throw NFCPassportReaderError.NFCNotSupported
+        #endif
         return hash
     }
 }
